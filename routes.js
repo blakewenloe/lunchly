@@ -18,6 +18,21 @@ router.get("/", async function (req, res, next) {
   }
 });
 
+router.get("/search/", async function (req, res, next) {
+  const term = req.query.term;
+  try {
+    const customers = await Customer.search(term);
+    if (customers.length === 0) {
+      return res.render("customer_list.html", {
+        err: { message: `No results found for '${term}'` },
+      });
+    }
+    return res.render("customer_list.html", { customers });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 /** Form to add a new customer. */
 
 router.get("/add/", async function (req, res, next) {

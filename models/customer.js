@@ -26,9 +26,25 @@ class Customer {
        FROM customers
        ORDER BY last_name, first_name`
     );
-    return results.rows.map(
-      (c) => new Customer(c, this.fullName(c.firstName, c.lastName))
+    return results.rows.map((c) => new Customer(c));
+  }
+
+  /** search customers */
+  static async search(term) {
+    const results = await db.query(
+      `SELECT id, 
+         first_name AS "firstName",  
+         last_name AS "lastName", 
+         phone, 
+         notes
+       FROM customers
+       WHERE upper(first_name) LIKE upper('%' || $1 || '%')
+       OR upper(last_name) LIKE upper('%' || $1 || '%')
+       ORDER BY last_name, first_name`,
+      [term]
     );
+
+    return results.rows.map((c) => new Customer(c));
   }
 
   /** get a customer by ID. */
