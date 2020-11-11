@@ -29,6 +29,22 @@ class Customer {
     return results.rows.map((c) => new Customer(c));
   }
 
+  /** get top 10 customers by reservations*/
+  static async topCustomers() {
+    const results = await db.query(
+      `SELECT customers.id,
+         first_name AS "firstName",  
+         last_name AS "lastName"
+       FROM customers
+       JOIN reservations ON customers.id=reservations.customer_id
+       GROUP BY customers.id
+       ORDER BY COUNT(reservations) DESC
+       LIMIT 10`
+    );
+
+    return results.rows.map((c) => new Customer(c));
+  }
+
   /** search customers */
   static async search(term) {
     const results = await db.query(

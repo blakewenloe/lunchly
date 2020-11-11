@@ -18,9 +18,22 @@ router.get("/", async function (req, res, next) {
   }
 });
 
+router.get("/top-10", async function (req, res, next) {
+  try {
+    const customers = await Customer.topCustomers();
+    return res.render("customer_list.html", {
+      customers,
+      top: true,
+      title: "Top 10 Customers",
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.get("/search/", async function (req, res, next) {
   // parse search term from url
-  let term = req.query.term.split(" ").join("");
+  let term = req.query.term;
   try {
     // call the search method of teh Customer class with the search term
     const customers = await Customer.search(term);

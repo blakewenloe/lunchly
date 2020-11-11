@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
-{% block title %}Customers{% endblock %}
+{% block title %}
+{% if title %}
+{{title}}
+{% else %}
+Customers
+{% endif %}
+{% endblock %}
 {% block content %}
 
 <a class="btn btn-primary" style="float: right" href="/add/">Add a Customer</a></p>
 
-<h1>Customers</h1>
+<h1>
+  {% if title %}
+  {{title}}
+  {% else %}
+  Customers
+  {% endif %}
+</h1>
 {% if err %}
 {{err.message}}
+{% endif %}
+{% if top %}
+<ul style="column-count: 1">
+  {% for customer in customers %}
+  <li><a href="/{{ customer.id }}/">{{customer.firstName}} {{customer.lastName}}</a></li>
+  {% endfor %}
+</ul>
 {% else %}
 <ul style="column-count: 4">
   {% for customer in customers %}
@@ -14,4 +33,5 @@
   {% endfor %}
 </ul>
 {% endif %}
+
 {% endblock %}
