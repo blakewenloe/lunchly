@@ -34,12 +34,11 @@ class Customer {
     const results = await db.query(
       `SELECT id, 
          first_name AS "firstName",  
-         last_name AS "lastName", 
-         phone, 
-         notes
+         last_name AS "lastName"
        FROM customers
-       WHERE upper(first_name) LIKE upper('%' || $1 || '%')
-       OR upper(last_name) LIKE upper('%' || $1 || '%')
+       WHERE CONCAT(lower(first_name), lower(last_name)) = $1 
+       OR position(lower($1) in lower(first_name)) > 0
+       OR position(lower($1) in lower(last_name)) > 0
        ORDER BY last_name, first_name`,
       [term]
     );

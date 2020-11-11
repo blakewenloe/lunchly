@@ -20,7 +20,7 @@ router.get("/", async function (req, res, next) {
 
 router.get("/search/", async function (req, res, next) {
   // parse search term from url
-  let term = req.query.term;
+  let term = req.query.term.split(" ").join("");
   try {
     // call the search method of teh Customer class with the search term
     const customers = await Customer.search(term);
