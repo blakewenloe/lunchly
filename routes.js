@@ -19,14 +19,18 @@ router.get("/", async function (req, res, next) {
 });
 
 router.get("/search/", async function (req, res, next) {
-  const term = req.query.term;
+  // parse search term from url
+  let term = req.query.term;
   try {
+    // call the search method of teh Customer class with the search term
     const customers = await Customer.search(term);
+    // if search returns 0 rows from database, return error.
     if (customers.length === 0) {
       return res.render("customer_list.html", {
         err: { message: `No results found for '${term}'` },
       });
     }
+    // return list of customer names that are like the search term
     return res.render("customer_list.html", { customers });
   } catch (err) {
     return next(err);
